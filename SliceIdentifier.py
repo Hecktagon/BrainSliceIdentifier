@@ -181,6 +181,7 @@ def main():
     reference_folder = 'Master_Reference_Folder'
     measurement_folder = 'Hippocampus_Measurements'
     query_image_path = input("Please provide query image filepath: ")
+    retrain = True if input("Would you like to retrain the image AI? (y/n): ") == "y" else False
     height = float(input("Hippocampus height: "))
     width = float(input("Hippocampus width: "))
     whole_height = float(input("Whole brain height: "))
@@ -204,14 +205,19 @@ def main():
     criterion = TripletLoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
-    # === Training loop ===
-    for epoch in range(num_epochs):
-        loss = train(model, dataloader, optimizer, criterion, device)
-        print(f"Epoch {epoch+1}/{num_epochs}, Loss: {loss:.4f}")
+    # === Determine whether to retrain AI or use existing model ===
+    if not retrain & os.path.exists(model_path): # use existing model instead of retraining
+        print(f"Using existing model at {model_path}")
 
-    # === Save the trained model ===
-    torch.save(model.state_dict(), model_path)
-    print(f"Model saved to {model_path}")
+    else:  # retrain the AI
+        # === Training loop ===
+        for epoch in range(num_epochs):
+            loss = train(model, dataloader, optimizer, criterion, device)
+            print(f"Epoch {epoch+1}/{num_epochs}, Loss: {loss:.4f}")
+
+        # === Save the trained model ===
+        torch.save(model.state_dict(), model_path)
+        print(f"Model saved to {model_path}")
 
     # === Load model for inference ===
     model.load_state_dict(torch.load(model_path, map_location=device))
