@@ -178,12 +178,25 @@ def get_dataset_and_slice(path):
 
 def main():
     # === CONFIGURATION ===
-    reference_folder = 'Master_Reference_Folder'
-    measurement_folder = 'Hippocampus_Measurements'
+    train_HC = True
+    HCvDG_string = "Hippocampus"
+    HCvDG = input("Would you like to trian on hippocampus (h) or dentate gyrus (d)?: ")
+    if HCvDG != "h":
+        train_HC = False
+        HCvDG_string = "Dentate Gyrus"
+
+
+    if train_HC:
+        reference_folder = 'Master_Reference_Folder'
+        measurement_folder = 'Hippocampus_Measurements'
+    else:
+        reference_folder = 'DG_Reference_Folder'
+        measurement_folder = 'DentateGyrus_Measurements'
+
     query_image_path = input("Please provide query image filepath: ")
     retrain = True if input("Would you like to retrain the image AI? (y/n): ") == "y" else False
-    height = float(input("Hippocampus height: "))
-    width = float(input("Hippocampus width: "))
+    height = float(input(f"{HCvDG_string} height: "))
+    width = float(input(f"{HCvDG_string} width: "))
     whole_height = float(input("Whole brain height: "))
     weight = float(input("Weight multiplier for measurement differences: "))
     model_path = "triplet_model.pth"
