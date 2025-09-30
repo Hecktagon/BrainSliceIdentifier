@@ -249,7 +249,7 @@ def main():
             curr_height = dataset.loc[slice_num, "Height"]
             curr_whole = dataset.loc[slice_num, "Whole_Height"]
         except Exception as e:
-            print(e + f"\n WARNING: No slice data for slice {slice_num} from dataset PA{dataset_num}")
+            print(str(e) + f"\n WARNING: No slice data for slice {slice_num} from dataset PA{dataset_num}")
             continue
 
         measurement_dist = shape_difference((curr_width, curr_height, curr_whole), (width, height, whole_height)) * weight
